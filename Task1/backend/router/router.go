@@ -1,8 +1,13 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func Router() {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.GET("/name", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -21,5 +26,5 @@ func Router() {
 			"Dream": "To solve people's problem using technology",
 		})
 	})
-	router.Run(":8080")
+	http.Handle("/", router)
 }
