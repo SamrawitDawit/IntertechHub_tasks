@@ -28,3 +28,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	})
 	router.ServeHTTP(w, r)
 }
+func main() {
+    http.HandleFunc("/", Handler)
+}
