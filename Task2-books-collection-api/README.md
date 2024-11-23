@@ -134,7 +134,7 @@ pip install -r requirements.txt
 
 - Create a .env file in the project root:
 ```arduino
-MONGO_URI=mongodb://localhost:27017/
+MONGO_URI=mongodb://<your uri>
 ```
 4. Run the application:
 

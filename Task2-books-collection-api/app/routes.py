@@ -29,7 +29,7 @@ def initialize_routes(app):
         try:
             data = validate_book(request.json)
             book_id = books.insert_one(data).inserted_id
-            return jsonify({"_id": str(book_id), **data}), 201
+            return jsonify({"message": "Book added"}), 201
         except Exception as e:
             return jsonify({"error": str(e)}), 400
     @app.route('/books/<id>', methods=['PUT'])
