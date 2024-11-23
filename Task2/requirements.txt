@@ -1,0 +1,6 @@
+flask
+flask-restful
+pymongo
+marshmallow
+gunicorn
+python-dotenv
