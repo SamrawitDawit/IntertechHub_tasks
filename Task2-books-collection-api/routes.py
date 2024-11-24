@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from app.database import books
-from app.models import validate_book
+from database import books
+from models import validate_book
 from bson.objectid import ObjectId
 
 
