@@ -14,9 +14,6 @@ The **Books Collection API** is a RESTful API built with Flask for managing a pe
 
 ## 📂 Endpoints
 
-### Base URL
-**Deployed API Base URL**: [https://your-api-url.com](https://your-api-url.com)
-
 ### Default Route (`/`)
 - **`GET /`**
   - **Description**: Displays a welcome message and lists all available endpoints.
@@ -117,7 +114,7 @@ The **Books Collection API** is a RESTful API built with Flask for managing a pe
 ## 🚀 Getting Started
 ### Prerequisites
 - Python 3.8+
-- MongoDB (local or cloud-hosted, e.g., MongoDB Atlas)
+- The database of this project is MongoDB Atlas, but you can change it to MongoDB local by changing the db uri inside database.py
 ### Setup
 1. Clone the repository:
 
@@ -139,7 +136,4 @@ The API will be available at `http://localhost:5000`.
 
 ## 🗂 Deployment
 The API is deployed and publicly accessible. Visit `https://intertech-hub-tasks-lmee.vercel.app/`
-
-## 🤝 Contributing
-Contributions are welcome! Please submit a pull request with detailed information about your changes.
 
