@@ -130,12 +130,6 @@ cd Task2-books-collection-api
 ```bash
 pip install -r requirements.txt
 ```
-3. Set up environment variables:
-
-- Create a .env file in the project root:
-```arduino
-MONGO_URI=mongodb://<your uri>
-```
 4. Run the application:
 
 ```bash
@@ -144,7 +138,7 @@ python app.py
 The API will be available at `http://localhost:5000`.
 
 ## 🗂 Deployment
-The API is deployed and publicly accessible. Visit 
+The API is deployed and publicly accessible. Visit `https://intertech-hub-tasks-lmee.vercel.app/`
 
 ## 🤝 Contributing
 Contributions are welcome! Please submit a pull request with detailed information about your changes.
