@@ -89,7 +89,14 @@ def initialize_routes(app):
         for book in all_books:
             book["_id"] = str(book["_id"])
         return jsonify(all_books), 200
-
+    
+    @app.route("/books/<author_name>", methods=["GET"])
+    @jwt_required()
+    def get_books_by_author(author_name):
+        all_books = list(books.find({"author": author_name}))
+        for book in all_books:
+            book["_id"] = str(book["_id"])
+        return jsonify(all_books), 200
 
     @app.route("/books", methods=["POST"])
     @jwt_required()
