@@ -1,280 +1,262 @@
-# Published postman documentation: `https://documenter.getpostman.com/view/33567770/2sAYBYhB5z`
+# Books Collection API Documentation
+
+## Published postman documentation can be found here: `https://documenter.getpostman.com/view/33567770/2sAYBYhB5z`
+
+This API allows users to manage a collection of books, including features for user authentication, CRUD operations for books, and adding/getting takeaways for books. The API also includes role-based access control (RBAC) for admin-specific functionalities.
+---
+
+## Base URL
+`https://intertech-hub-tasks-pw8a.vercel.app/`
 
 
-# Auth Signup
-This endpoint allows the user to sign up by providing a username, password, and role in the request body.
-## Request Body
-* username (string) - The username of the user.
-* password (string) - The password for the user account.
-* role (string) - The role of the user (e.g., admin, user).
+---
 
-## Response
-Upon successful signup, the server returns a status code of 201 and a JSON response with a message indicating the success of the signup process.
-Example:
+# Endpoints
 
+## 1. Home
+### `GET /`
+Displays a welcome message and lists the available API endpoints.
 
-```JSON
+**Response:**
+```json
 {
-    "message": "user created successfully"
+    "message": "Welcome to the Books Collection API!",
+    "endpoints": [
+        {"POST": "/auth/signup - Create a new user"},
+        {"POST": "/auth/login - Authenticate a user and get JWT"},
+        {"GET": "/books - Fetch all books (user-accessible)"},
+        {"POST": "/books - Add a new book (user-accessible)"},
+        {"PUT": "/books/<id> - Update a book by ID (user-accessible)"},
+        {"DELETE": "/books/<id> - Delete a book by ID (admin-only)"},
+        {"GET": "/books/all - Fetch all books (admin-only)"},
+        {"POST": "/books/<id>/takeaways - Add a takeaway for a book (user-accessible)"},
+        {"GET": "/books/<id>/takeaways - Get all takeaways for a book (user-accessible)"}
+    ]
 }
 ```
+## 2. Authentication
+### 2.1 Sign Up
+#### `POST /auth/signup`
+Creates a new user.
 
-# Auth Login
-This endpoint is used to authenticate a user and obtain an access token.
-## Request Body
-* username (string, required): The username of the user.
-* password (string, required): The password of the user.
-
-## Response
-The response is in JSON format with the following schema:
-
-
-``` JSON
+**Request Body:**
+```json
 {
-  "type": "object",
-  "properties": {
-    "access_token": {
-      "type": "string"
+    "username": "user123",
+    "password": "secure_password"
+}
+```
+**Response:**
+Success: 201
+```json
+{
+    "message": "User created successfully"
+}
+```
+Error: 400 or 500
+
+### 2.2 Login
+`POST /auth/login`
+Authenticates a user and returns a JWT.
+
+**Request Body:**
+
+```json
+{
+    "username": "user123",
+    "password": "secure_password"
+}
+```
+**Response:**
+Success: 200
+```json
+{
+    "access_token": "<JWT>"
+}
+```
+Error: 401
+```json
+{
+    "error": "Invalid username or password"
+}
+```
+## 3. Books Management
+### 3.1 Get All Books (Admin-Only)
+#### `GET /books/all`
+Fetches all books in the collection. Requires admin access.
+
+**Headers:**
+
+```makefile
+Authorization: Bearer <JWT>
+```
+**Response:**
+
+Success: 200
+```json
+[
+    {
+        "_id": "book_id",
+        "title": "Book Title",
+        "author": "Author Name"
     }
-  }
-}
+]
 ```
+Error: 403 or 500
+### 3.2 Get Books (User-Accessible)
+`GET /books`
+Fetches all books in the collection.
 
-The response contains an access token as a string.
-
-
-# Add New Book
-This endpoint allows you to add a new book to the database.
-## Request Body
-* title (string, required): The title of the book.
-* author (string, required): The author of the book.
-* isbn (string, required): The ISBN of the book.
-* published_year (integer, required): The year the book was published.
-
-## Response
-The response is in JSON format with the following schema:
-
-
-```JSON
-{
-    "type": "object",
-    "properties": {
-        "message": {
-            "type": "string"
-        }
+**Headers:**
+```makefile
+Authorization: Bearer <JWT>
+```
+**Response:**
+Success: 200
+```json
+[
+    {
+        "_id": "book_id",
+        "title": "Book Title",
+        "author": "Author Name"
     }
-}
+]
 ```
+### 3.3 Get Books by Author (User-Accessible)
+`GET /books/<author_name>`
+Fetches all books written by a specific author.
 
-## Example
-Request:
+**Headers:**
 
-```JSON
+```makefile
+Authorization: Bearer <JWT>
+```
+**Response:**
+Success: 200
+```json
+[
+    {
+        "_id": "book_id",
+        "title": "Book Title",
+        "author": "Author Name"
+    }
+]
+```
+### 3.4 Add a Book (User-Accessible)
+`POST /books`
+Adds a new book to the collection.
+
+**Headers:**
+```makefile
+Authorization: Bearer <JWT>
+```
+**Request Body:**
+
+```json
 {
-    "title": "Title",
-    "author": "Name",
-    "isbn": "1234567890123",
-    "published_year": 2023
+    "title": "Book Title",
+    "author": "Author Name"
 }
 ```
-Response:
-
-```JSON
+**Response:**
+Success: 201
+```json
 {
     "message": "Book added"
 }
 ```
+### 3.5 Update a Book by ID (User-Accessible)
+`PUT /books/<id>`
+Updates a book in the collection by its ID.
 
+**Headers:**
 
-# Update Book Details
-This endpoint allows the client to update the details of a specific book using its unique identifier.
-## Request Body
-* title (string) - The updated title of the book.
-* author (string) - The updated author of the book.
-* isbn (string) - The updated ISBN of the book.
-* published_year (number) - The updated published year of the book.
+```makefile
+Authorization: Bearer <JWT>
+```
 
-## Response
-The response will be in JSON format with the following schema:
+**Request Body:**
 
-```JSON
+```json
 {
-    "type": "object",
-    "properties": {
-        "message": {
-            "type": "string"
-        }
-    }
+    "title": "Updated Title",
+    "author": "Updated Author Name"
 }
 ```
-The response will include a message indicating the status of the update operation.
-
-
-# Delete Book
-
-The HTTP DELETE request is used to delete a specific book with the given ID. Upon successful deletion, the API returns a JSON response with a status code of 200 and a message indicating the success of the operation.
-
-### Response
-
-The response for this request can be documented as a JSON schema:
-
-``` json
+**Response:**
+Success: 200
+```json
 {
-    "type": "object",
-    "properties": {
-        "message": {
-            "type": "string"
-        }
-    }
+    "message": "Book updated"
 }
+```
+### 3.6 Delete a Book by ID (Admin-Only)
+`DELETE /books/<id>`
+Deletes a book from the collection by its ID. Requires admin access.
 
- ```
+**Headers:**
 
-### GET /books
-
-This endpoint retrieves a list of books.
-
-#### Request
-
-There are no request parameters for this endpoint.
-
-#### Response
-
-The response is in JSON format and returns an array of book objects. Each book object has the following properties:
-
-- `_id` (string): The unique identifier of the book.
-    
-- `author` (string): The name of the author of the book.
-    
-- `isbn` (string): The International Standard Book Number (ISBN) of the book.
-    
-- `published_year` (number): The year in which the book was published.
-    
-- `title` (string): The title of the book.
-    
-
-Example response:
-
-``` json
-[
-    {
-        "_id": "",
-        "author": "",
-        "isbn": "",
-        "published_year": 0,
-        "title": ""
-    }
-]
-
- ```
-
- # Get All Books(Admin only)
-
-This endpoint makes an HTTP GET request to retrieve all the books. The request does not require any parameters in the request body or URL. The response will be in JSON format with an array of objects, each representing a book. Each book object will have properties like `_id`, `author`, `isbn`, `published_year`, and `title`. The values for these properties will be specific to each book in the database.
-
-### GET /books/Name
-
-This endpoint retrieves information about a book based on its name.
-
-#### Request
-
-No request body is required for this endpoint.
-
-#### Response
-
-The response will be a JSON array containing information about the book. Each object in the array will have the following properties:
-
-- `_id` (string): The unique identifier of the book.
-    
-- `author` (string): The name of the author of the book.
-    
-- `isbn` (string): The ISBN of the book.
-    
-- `published_year` (number): The year in which the book was published.
-    
-- `title` (string): The title of the book.
-    
-
-#### Example Response
-
-``` json
-[
-    {
-        "_id": "",
-        "author": "",
-        "isbn": "",
-        "published_year": 0,
-        "title": ""
-    }
-]
-
- ```
-
- ### Add Book Takeaway
-
-This endpoint allows the user to add a takeaway for a specific book.
-
-#### Request Body
-
-- takeaway (string, required): The takeaway to be added for the book.
-    
-
-#### Response (201 - Created)
-
-The response will be in JSON format with the following schema:
-
-``` json
+```makefile
+Authorization: Bearer <JWT>
+```
+**Response:**
+Success: 200
+```json
 {
-    "type": "object",
-    "properties": {
-        "message": {
-            "type": "string"
-        }
-    }
+    "message": "Book deleted"
 }
+```
+Error: 404 or 403
+## 4. Takeaways Management
+### 4.1 Add a Takeaway (User-Accessible)
+`POST /books/<id>/takeaways`
+Adds a takeaway (note or highlight) for a specific book.
 
- ```
+**Headers:**
 
- ### GET /books/{bookId}/takeaways
+```makefile
+Authorization: Bearer <JWT>
+```
+**Request Body:**
 
-This endpoint retrieves the takeaways for a specific book identified by the `bookId`.
-
-#### Request
-
-No request body is required for this endpoint.
-
-- `bookId` (path parameter) : The unique identifier of the book for which takeaways are to be retrieved.
-    
-
-#### Response
-
-The response will be a JSON object with the following schema:
-
-``` json
+```json
 {
-    "takeaways": {
-        "type": "array",
-        "items": {
-            "type": "string"
-        }
-    }
+    "takeaway": "Key insight or lesson"
 }
+```
+**Response:**
+Success: 201
+```json
+{
+    "message": "Takeaway added successfully"
+}
+```
+### 4.2 Get All Takeaways (User-Accessible)
+`GET /books/<id>/takeaways`
+Fetches all takeaways for a specific book.
 
- ```
+**Headers:**
 
-The response will contain an array of takeaways for the specified book. Each takeaway is represented as a string.
+```makefile
+Authorization: Bearer <JWT>
+```
+**Response:**
 
-Example response:
-
-``` json
+Success: 200
+```json
 {
     "takeaways": [
-        "Example takeaway 1",
-        "Example takeaway 2"
+        "Key insight 1",
+        "Key insight 2"
     ]
 }
+```
+Error: 404
 
- ```
 
-
-
+## Error Codes
+- 400: Bad Request (e.g., validation errors).
+- 401: Unauthorized (e.g., invalid or missing JWT).
+- 403: Forbidden (e.g., admin-only access for non-admins).
+- 404: Not Found (e.g., resource does not exist).
+- 500: Internal Server Error.
