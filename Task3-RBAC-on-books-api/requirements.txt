@@ -1,5 +1,6 @@
 flask
 flask-restful
+Flask-JWT-Extended
 pymongo
 bcrypt
 marshmallow
