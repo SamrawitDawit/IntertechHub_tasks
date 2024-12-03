@@ -5,11 +5,9 @@ from marshmallow import ValidationError
 from database import books, users 
 from models import validate_book, validate_user
 from bcrypt import hashpw, gensalt, checkpw
-import os
-
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "Iamasecretkey")
+app.config["JWT_SECRET_KEY"] = "your-secret-key"
 jwt = JWTManager(app)
 
 def initialize_routes(app):
@@ -46,11 +44,15 @@ def initialize_routes(app):
     def signup():
         try:
             user_data = validate_user(request.json)
+            username = user_data.get('username')
+            user = users.find_one({"username": username})
+            if user:
+                return jsonify({"message": "User already exists"}), 400
             
             hashed_password = hashpw(user_data["password"].encode("utf-8"), gensalt())
             user_data["password"] = hashed_password
             
-            users.insert_one(user_data)
+            users.insert_one({"username": username, "password": hashed_password, "role": "user"})
             return jsonify({"message": "User created successfully"}), 201
         except ValidationError as e:
             return jsonify({"errors": e.messages}), 400
@@ -112,14 +114,12 @@ def initialize_routes(app):
     @app.route("/books/<id>", methods=["PUT"])
     @jwt_required()
     def update_book(id):
-        try:
-            data = validate_book(request.json)
-            result = books.update_one({"_id": ObjectId(id)}, {"$set": data})
-            if result.matched_count == 0:
-                return jsonify({"error": "Book not found"}), 404
-            return jsonify({"message": "Book updated"}), 200
-        except Exception as e:
-            return jsonify({"error": str(e)}), 400
+        data = request.json
+        result = books.update_one({"_id": ObjectId(id)}, {"$set": data})
+        if result.matched_count == 0:
+            return jsonify({"error": "Book not found"}), 404
+        return jsonify({"message": "Book updated"}), 200
+
 
 
     @app.route("/books/<id>", methods=["DELETE"])
