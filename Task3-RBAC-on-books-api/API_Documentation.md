@@ -1,16 +1,12 @@
 # Books Collection API Documentation
 
 ## Published postman documentation can be found here: `https://documenter.getpostman.com/view/33567770/2sAYBYhB5z`
----
-
 This API allows users to manage a collection of books, including features for user authentication, CRUD operations for books, and adding/getting takeaways for books. The API also includes role-based access control (RBAC) for admin-specific functionalities.
 
 
 ## Base URL
 `https://intertech-hub-tasks-pw8a.vercel.app/`
 
-
----
 
 # Endpoints
 
